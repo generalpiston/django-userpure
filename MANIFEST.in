@@ -1,0 +1,8 @@
+include README.mkd
+include MANIFEST.in
+include LICENSE
+include PKG-INFO
+include UPDATES
+include CREDITS
+include AUTHORS
+recursive-include userpure *
