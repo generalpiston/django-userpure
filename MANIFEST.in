@@ -1,0 +1,7 @@
+include README.md
+include MANIFEST.in
+include LICENSE.txt
+include UPDATES
+include CREDITS
+include AUTHORS
+recursive-include userpure *
