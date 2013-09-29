@@ -1,7 +1,7 @@
 import datetime
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -60,11 +60,9 @@ class UserpureActivationMixin(models.Model):
         subject = render_to_string(subject_template, context)
         body = render_to_string(body_template, context)
         html_body = render_to_string(html_template, context)
-        send_mail(subject,
-                  body,
-                  settings.DEFAULT_FROM_EMAIL,
-                  [self.email, ], html_message=html_body)
-        self.save()
+        msg = EmailMultiAlternatives(subject, body, settings.DEFAULT_FROM_EMAIL, [self.email])
+        msg.attach_alternative(html_body, "text/html")
+        msg.send()
 
     @property
     def activation_key_expired(self):
