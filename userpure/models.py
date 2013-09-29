@@ -45,7 +45,8 @@ class UserpureActivationMixin(models.Model):
 
     def send_activation_email(self,
                               subject_template='userpure/emails/activation_email_subject.txt',
-                              body_template='userpure/emails/activation_email_body.html'):
+                              body_template='userpure/emails/activation_email_body.txt',
+                              html_template='userpure/emails/activation_email_body.html'):
         """
         Sends a activation email to the user.
 
@@ -58,10 +59,11 @@ class UserpureActivationMixin(models.Model):
                    'domain': Site.objects.get_current().domain}
         subject = render_to_string(subject_template, context)
         body = render_to_string(body_template, context)
+        html_body = render_to_string(html_template, context)
         send_mail(subject,
                   body,
                   settings.DEFAULT_FROM_EMAIL,
-                  [self.email, ])
+                  [self.email, ], html_message=html_body)
         self.save()
 
     @property
