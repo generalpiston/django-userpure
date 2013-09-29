@@ -43,7 +43,7 @@ class UserpureActivationMixin(models.Model):
         self.activation_key = sha1(self.get_username()).hexdigest()
 
     def send_activation_email(self,
-                              request,
+                              activation_url,
                               subject_template='userpure/emails/activation_email_subject.txt',
                               body_template='userpure/emails/activation_email_body.txt',
                               html_template='userpure/emails/activation_email_body.html'):
@@ -55,7 +55,7 @@ class UserpureActivationMixin(models.Model):
         """
         context = {'user': self,
                    'activation_days': userpure_settings.USERPURE_ACTIVATION_DAYS,
-                   'activation_url':  "%s?activation_key=%s" % (request.build_absolute_uri('/accounts/activation'), self.activation_key)}
+                   'activation_url':  activation_url}
         subject = render_to_string(subject_template, context)
         body = render_to_string(body_template, context)
         html_body = render_to_string(html_template, context)
