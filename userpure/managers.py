@@ -1,7 +1,11 @@
+import logging
 from django.db import models
 from django.contrib.auth import get_user_model
 
 __all__ = ['UserpureActivationManager']
+
+
+logger = logging.getLogger('django.request')
 
 
 class UserpureActivationManager(models.Manager):
@@ -31,11 +35,13 @@ class UserpureActivationManager(models.Manager):
         try:
             user = self.get(activation_key=activation_key)
         except self.model.DoesNotExist:
+            logging.error('Could not activate user because user with activation key %s does not exist' % activation_key)
             return None
         if not user.activation_key_expired:
             user.is_active = True
             user.save()
             return user
+        logging.error('Could not activate user because %s has an expired activation key' % user.email)
         return None
 
     def expired(self):
